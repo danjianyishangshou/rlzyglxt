@@ -1,6 +1,11 @@
+// 0成本上手cookie
+// 获取cookie Cookie.get('name')
+// set  remove
+
 import Cookies from 'js-cookie'
 
-const TokenKey = 'vue_admin_template_token'
+// cookie名字xnmrzglxt-token
+const TokenKey = 'xnmrzglxt-token'
 
 export function getToken() {
   return Cookies.get(TokenKey)

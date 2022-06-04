@@ -12,6 +12,8 @@ import App from './App'
 import store from './store'
 import router from './router'
 
+// 发请求的子项
+// import http from '@/utils/request'
 import '@/icons' // icon
 import '@/permission' // permission control
 
@@ -28,6 +30,7 @@ if (process.env.NODE_ENV === 'production') {
   mockXHR()
 }
 
+// Vue.prototype.$http = http
 // set ElementUI lang to EN
 Vue.use(ElementUI, { locale })
 // 如果想要中文版 element-ui，按如下方式声明

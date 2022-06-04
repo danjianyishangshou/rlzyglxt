@@ -56,6 +56,7 @@ export function parseTime(time, cFormat) {
  * @param {string} option
  * @returns {string}
  */
+// 用于格式化函数
 export function formatTime(time, option) {
   if (('' + time).length === 10) {
     time = parseInt(time) * 1000

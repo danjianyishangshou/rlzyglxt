@@ -12,8 +12,8 @@ const name = defaultSettings.title || 'vue Admin Template' // page title
 // use administrator privileges to execute the command line.
 // For example, Mac: sudo npm run
 // You can change the port by the following methods:
-// port = 9528 npm run dev OR npm run dev --port = 9528
-const port = process.env.port || process.env.npm_config_port || 9528 // dev port
+// port = 8888 npm run dev OR npm run dev --port = 8888
+const port = process.env.port || process.env.npm_config_port || 8888 // dev port
 
 // All configuration item explanations can be find in https://cli.vuejs.org/config/
 module.exports = {
@@ -29,6 +29,7 @@ module.exports = {
   assetsDir: 'static',
   lintOnSave: process.env.NODE_ENV === 'development',
   productionSourceMap: false,
+  // 开发服务器
   devServer: {
     port: port,
     open: true,
@@ -37,6 +38,23 @@ module.exports = {
       errors: true
     },
     before: require('./mock/mock-server.js')
+    // 配置开发服务器的代理
+    // proxy: {
+    //   // 设置一个标记，将来只要请求url中含有这个标记，就走以下代理
+    //   // 代码中请求自己'http://localhost:8888'=>将被代理
+    //   // 代理副去器转发到 http://ihrm-java.itheima.net
+
+    //   // 有时候后端接口不包含/api,可以使用路径重写pathReWrite
+    //   '/api': {
+    //     // 目标地址
+    //     target: 'http://ihrm-java.itheima.net'
+    //     // target: 'http://localhost:3000'
+    //     // pathReWrite: {
+    //     //   '^/api': ''
+    //     // }
+    //   }
+    //   // '/api2': {},
+    // }
   },
   configureWebpack: {
     // provide the app's title in webpack's name field, so that

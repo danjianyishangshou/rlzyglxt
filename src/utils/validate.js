@@ -14,7 +14,12 @@ export function isExternal(path) {
  * @param {string} str
  * @returns {Boolean}
  */
+// 定义了一个校验函数，只有在传入admin editor才会返回true
 export function validUsername(str) {
   const valid_map = ['admin', 'editor']
   return valid_map.indexOf(str.trim()) >= 0
+}
+
+export function validMobile(str) {
+  return /^1[3-9]\d{9}$/.test(str)
 }
