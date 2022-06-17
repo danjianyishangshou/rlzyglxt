@@ -1,16 +1,16 @@
 <template>
   <div :class="classObj" class="app-wrapper">
-    //兼容移动端
+    <!-- 兼容移动端 -->
     <div v-if="device==='mobile'&&sidebar.opened" class="drawer-bg" @click="handleClickOutside" />
-    //侧边栏
+    <!-- 侧边栏 -->
     <sidebar class="sidebar-container" />
-    //右侧
+    <!-- 右侧 -->
     <div class="main-container">
       <div :class="{'fixed-header':fixedHeader}">
-        //头部
+        <!-- 头部 -->
         <navbar />
       </div>
-      //应该是二级出口 router-view 封装成了一个结构
+      <!-- 应该是二级出口 router-view 封装成了一个结构 -->
       <app-main />
     </div>
   </div>

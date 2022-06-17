@@ -138,7 +138,21 @@ export default {
         // 最终将请求封装到vuex中
         // this.$store.dispatch('user/login', this.loginForm)
         // 最简
-        this.login(this.loginForm)
+        // 发请求之前添加loading
+        this.loading = true
+        this.login(this.loginForm).then((res) => {
+          this.$message({
+            message: '恭喜你，登陆成功',
+            type: 'success'
+          })
+          this.$router.push('/')
+        }).catch((err) => {
+          console.log(err)
+          // this.$message.error()
+        }).finally(() => {
+          // 无论是成功或者失败都会调用
+          this.loading = false
+        })
       })
     }
   }

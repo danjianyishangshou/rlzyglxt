@@ -8,22 +8,10 @@ function resolve(dir) {
 
 const name = defaultSettings.title || 'vue Admin Template' // page title
 
-// If your port is set to 80,
-// use administrator privileges to execute the command line.
-// For example, Mac: sudo npm run
-// You can change the port by the following methods:
-// port = 8888 npm run dev OR npm run dev --port = 8888
 const port = process.env.port || process.env.npm_config_port || 8888 // dev port
 
-// All configuration item explanations can be find in https://cli.vuejs.org/config/
 module.exports = {
-  /**
-   * You will need to set publicPath if you plan to deploy your site under a sub path,
-   * for example GitHub Pages. If you plan to deploy your site to https://foo.github.io/bar/,
-   * then publicPath should be set to "/bar/".
-   * In most cases please use '/' !!!
-   * Detail: https://cli.vuejs.org/config/#publicpath
-   */
+
   publicPath: '/',
   outputDir: 'dist',
   assetsDir: 'static',
@@ -37,28 +25,20 @@ module.exports = {
       warnings: false,
       errors: true
     },
-    before: require('./mock/mock-server.js')
+    // before: require('./mock/mock-server.js'),
     // 配置开发服务器的代理
-    // proxy: {
-    //   // 设置一个标记，将来只要请求url中含有这个标记，就走以下代理
-    //   // 代码中请求自己'http://localhost:8888'=>将被代理
-    //   // 代理副去器转发到 http://ihrm-java.itheima.net
-
-    //   // 有时候后端接口不包含/api,可以使用路径重写pathReWrite
-    //   '/api': {
-    //     // 目标地址
-    //     target: 'http://ihrm-java.itheima.net'
-    //     // target: 'http://localhost:3000'
-    //     // pathReWrite: {
-    //     //   '^/api': ''
-    //     // }
-    //   }
-    //   // '/api2': {},
-    // }
+    proxy: {
+      // 这里的api 表示如果我们的请求地址有/api的时候,就出触发代理机制
+      '/api': {
+        // target: 'http://ihrm-java.itheima.net/' // 我们要代理请求的地址
+        // target: 'http://localhost:3000'
+        // http://8.131.91.46:6868 光哥搭建的服务器
+        target: 'http://103.47.83.172:3000'
+      }
+    }
   },
   configureWebpack: {
-    // provide the app's title in webpack's name field, so that
-    // it can be accessed in index.html to inject the correct title.
+
     name: name,
     resolve: {
       alias: {
@@ -67,21 +47,17 @@ module.exports = {
     }
   },
   chainWebpack(config) {
-    // it can improve the speed of the first screen, it is recommended to turn on preload
     config.plugin('preload').tap(() => [
       {
         rel: 'preload',
-        // to ignore runtime.js
-        // https://github.com/vuejs/vue-cli/blob/dev/packages/@vue/cli-service/lib/config/app.js#L171
+
         fileBlacklist: [/\.map$/, /hot-update\.js$/, /runtime\..*\.js$/],
         include: 'initial'
       }
     ])
 
-    // when there are many pages, it will cause too many meaningless requests
     config.plugins.delete('prefetch')
 
-    // set svg-sprite-loader
     config.module
       .rule('svg')
       .exclude.add(resolve('src/icons'))
@@ -105,7 +81,7 @@ module.exports = {
             .plugin('ScriptExtHtmlWebpackPlugin')
             .after('html')
             .use('script-ext-html-webpack-plugin', [{
-            // `runtime` must same as runtimeChunk name. default is `runtime`
+
               inline: /runtime\..*\.js$/
             }])
             .end()
@@ -117,12 +93,12 @@ module.exports = {
                   name: 'chunk-libs',
                   test: /[\\/]node_modules[\\/]/,
                   priority: 10,
-                  chunks: 'initial' // only package third parties that are initially dependent
+                  chunks: 'initial'
                 },
                 elementUI: {
-                  name: 'chunk-elementUI', // split elementUI into a single package
-                  priority: 20, // the weight needs to be larger than libs and app or it will be packaged into libs or app
-                  test: /[\\/]node_modules[\\/]_?element-ui(.*)/ // in order to adapt to cnpm
+                  name: 'chunk-elementUI',
+                  priority: 20,
+                  test: /[\\/]node_modules[\\/]_?element-ui(.*)/
                 },
                 commons: {
                   name: 'chunk-commons',
@@ -133,7 +109,7 @@ module.exports = {
                 }
               }
             })
-          // https:// webpack.js.org/configuration/optimization/#optimizationruntimechunk
+
           config.optimization.runtimeChunk('single')
         }
       )
