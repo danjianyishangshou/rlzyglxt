@@ -43,6 +43,9 @@ Object.keys(filters).forEach(item => {
 // for (const key in directives) {
 //   Vue.directive(key, directives[key])
 // }
+// 全局注册打印
+import Print from 'vue-print-nb'
+Vue.use(Print)
 
 if (process.env.NODE_ENV === 'production') {
   const { mockXHR } = require('../mock')

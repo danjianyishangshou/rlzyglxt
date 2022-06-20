@@ -30,10 +30,10 @@ module.exports = {
     proxy: {
       // 这里的api 表示如果我们的请求地址有/api的时候,就出触发代理机制
       '/api': {
-        // target: 'http://ihrm-java.itheima.net/' // 我们要代理请求的地址
+        target: 'http://ihrm-java.itheima.net/' // 我们要代理请求的地址
         // target: 'http://localhost:3000'
         // http://8.131.91.46:6868 光哥搭建的服务器
-        target: 'http://103.47.83.172:3000'
+        // target: 'http://103.47.83.172:3000'
       }
     }
   },
