@@ -41,9 +41,21 @@ router.beforeEach(async(to, from, next) => {
       NProgress.done()
     } else {
       if (!store.state.user.userInfo.userId) {
-        await store.dispatch('user/getUserInfo')
-        // console.log(res, '这是配置页面加载优化是的res请求')
-        next()
+        const { roles } = await store.dispatch('user/getUserInfo')
+        console.log(roles)
+        const otherRoutes = await store.dispatch('permission/filterRoutes', roles.menus)
+
+        router.addRoutes([
+          ...otherRoutes,
+          { path: '*', redirect: '/404', hidden: true }
+        ])
+        // 得到用户信息中的 menus 来匹配页面显示信息
+
+        next({
+          ...to,
+          replace: true
+        })
+        return
       }
       next()
     }

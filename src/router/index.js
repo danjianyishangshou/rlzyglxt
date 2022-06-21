@@ -65,10 +65,10 @@ export const constantRoutes = [
       name: 'import',
       component: () => import('../views/import/index.vue')
     }]
-  },
+  }
 
   // 404 page must be placed at the end !!!
-  { path: '*', redirect: '/404', hidden: true }
+  // { path: '*', redirect: '/404', hidden: true }
 ]
 // 创建了一个路由实例 即路由器
 const createRouter = () => new Router({
@@ -76,7 +76,7 @@ const createRouter = () => new Router({
   // 滚动行为配置 将来切换路由组件时 相当于出现了从上到下的切换效果
   scrollBehavior: () => ({ y: 0 }),
   // 将路由的路径配置的数组放在了路由器的配置文件中 方便后期直接拿到这个数组进行操作
-  routes: [...constantRoutes, ...asyncRoutes]
+  routes: [...constantRoutes]
 })
 
 // 路由实例 设置路由前置守卫

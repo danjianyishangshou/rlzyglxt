@@ -21,7 +21,7 @@
                 <template #default="{row}">
                   <!-- obj中数据{row:每一行的数据，column,$index} -->
                   <!-- {{ row }} -->
-                  <el-button type="success" size="small">分配权限</el-button>
+                  <el-button type="success" size="small" @click="assign(row.id)">分配权限</el-button>
                   <el-button type="primary" size="small" @click="editRole(row.id)">编辑</el-button>
                   <el-button type="danger" size="small" @click="del(row.id)">删除</el-button>
                 </template>
@@ -98,12 +98,33 @@
           <el-button size="small" type="primary" @click="clickSubmit"> 确认</el-button>
         </template>
       </el-dialog>
+      <!-- 分配权限的弹层 -->
+      <el-dialog title="分配权限" :visible="showAssignDialog" @close="closeAssignDialog">
+        <el-tree
+          ref="tree"
+          :data="treeList"
+          :props="{label:'name'}"
+          default-expand-all
+          show-checkbox
+          check-strictly
+          node-key="id"
+        />
+        <!-- <el-tree :data="treeList" :props="defaultProps" /> -->
+        <template #footer>
+          <div style="text-align: right;">
+            <el-button @click="closeAssignDialog">取消</el-button>
+            <el-button type="primary" @click.native="clickAssignSubmit">确定</el-button>
+          </div>
+        </template>
+      </el-dialog>
     </div>
   </div>
 </template>
 
 <script>
-import { reqGetRoleList, reqDelRoleList, reqAddRole, reqGetRoleDetail, reqUpDataRole } from '@/api/setting'
+import { reqGetPermissionList } from '@/api/permission'
+import { listToTree } from '@/utils/listToTree'
+import { reqGetRoleList, reqDelRoleList, reqAddRole, reqGetRoleDetail, reqUpDataRole, reqAssignPerm } from '@/api/setting'
 import { reqGetCompanyById } from '@/api/company'
 import { mapState } from 'vuex'
 export default {
@@ -113,11 +134,18 @@ export default {
       // 默认展示name等于second的组件
       activeName: 'second',
       list: [],
+      treeList: [],
+      // defaultProps: {
+      //   children: 'children',
+      //   label: 'name'
+      // },
       page: 1,
       pagesize: 3,
       total: 10,
       loading: false,
       showDialog: false,
+      showAssignDialog: false,
+      roleId: '', // 分配权限
       rules: {
         name: [{
           required: true, message: '不能为空', tagger: ['blur', 'change']
@@ -224,6 +252,30 @@ export default {
     async  getCompanyById() {
       const res = await reqGetCompanyById(this.userInfo.companyId)
       this.companyForm = res.data
+    },
+    // 打开分配权限对话框
+    async  assign(id) {
+      this.roleId = id
+      this.showAssignDialog = true
+      const { data } = await reqGetPermissionList()
+      this.treeList = listToTree(data, '0')
+      // 数据回显
+      const { data: { permIds }} = await reqGetRoleDetail(id)
+
+      this.$refs.tree.setCheckedKeys(permIds)
+    },
+    // 关闭分配权限对话框
+    closeAssignDialog() {
+      this.showAssignDialog = false
+      this.$refs.tree.setCheckedKeys([])
+    },
+    async clickAssignSubmit() {
+      await reqAssignPerm({
+        id: this.roleId,
+        permIds: this.$refs.tree.getCheckedKeys()
+      })
+      this.$message.success('分配成功')
+      this.showAssignDialog = false
     }
   }
 }

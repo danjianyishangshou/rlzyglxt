@@ -1,4 +1,5 @@
 import { reqLogin, reqGetProFile, reqGetBaseInfo } from '@/api/user'
+import { resetRouter } from '@/router'
 // 只用来存放用户相关的数据
 // token等
 import { getToken, setToken, removeToken } from '@/utils/auth'
@@ -25,6 +26,11 @@ const actions = {
 
     const res = await reqLogin(obj)
     context.commit('setToken', res.data)
+    // resetRouter
+    resetRouter()
+    // 新语法：在A模块中要提交B模块的mutation,传第三个参数{root:true}
+    // 三个参数的意义是：将来会从全局出发，去找
+    context.commit('permission/filterRoutes', [], { root: true })
     return res
   },
   // 注意没有请求成功的时候不要让其进入页面

@@ -6,7 +6,7 @@ export default {
   children: [
     {
       path: 'index',
-      name: 'Approvals',
+      name: 'approvals',
       component: () => import('@/views/approvals/index'),
       meta: { title: '审批', icon: 'tree-table' }
       // hidden: false

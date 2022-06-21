@@ -7,8 +7,8 @@
         </template>
         <template #right>
           <!-- $router.push('/import?type=user')用于判断那个页面发起的跳转 -->
-          <el-button type="warning" size="small" @click="$router.push('/import?type=user')">excel导入</el-button>
-          <el-button type="danger" size="small" @click="clickExport">excel导出</el-button>
+          <el-button v-if="showBtn('EXCEL_EXPORT')" type="warning" size="small" @click="$router.push('/import?type=user')">excel导入</el-button>
+          <el-button v-if="showBtn('EXCEL_IMPORT')" type="danger" size="small" @click="clickExport">excel导出</el-button>
           <el-button type="primary" size="small" @click="showDialog = true">新增员工</el-button>
         </template>
       </PageTools>
@@ -49,8 +49,8 @@
               <el-button type="text" size="small">转正</el-button>
               <el-button type="text" size="small">调岗</el-button>
               <el-button type="text" size="small">离职</el-button>
-              <el-button type="text" size="small">角色</el-button>
-              <el-button type="text" size="small" @click="del(row.id)">删除</el-button>
+              <el-button type="text" size="small" @click="editRole(row.id)">角色</el-button>
+              <el-button :disabled="!clickBtnPermission('point-user-delete')" type="text" size="small" @click="del(row.id)">删除</el-button>
             </template>
           </el-table-column>
         </el-table>
@@ -88,6 +88,7 @@
       <!-- <el-dialog title="二维码" :visible="showCodeDialog" @close="closeDialog">
         二维码
       </el-dialog> -->
+      <AssignRole :show-role-dialog.sync="showRoleDialog" :user-id="userId" />
     </div>
   </div>
 </template>
@@ -101,7 +102,9 @@ import { reqGetEmployeeList, reqDelEmployee } from '@/api/employees'
 import obj from '@/constant/employees'
 const { hireType } = obj
 import dayjs from 'dayjs'
-
+import AssignRole from './components/assign-role.vue'
+// 引入混入
+import check from '@/mixins/check'
 export default {
   name: 'Employees',
   // filters: {
@@ -110,8 +113,11 @@ export default {
   //   }
   // },
   components: {
-    AddEmployee
+    AddEmployee,
+    AssignRole
   },
+  // 使用混入
+  mixins: [check],
   data() {
     return {
       list: [],
@@ -122,7 +128,9 @@ export default {
       showDialog: false,
       defaultImg: 'https://img1.baidu.com/it/u=310131527,3224816793&fm=253&fmt=auto&app=138&f=JPEG?w=493&h=488',
       imgError: imgError,
-      showCodeDialog: false
+      showCodeDialog: false,
+      showRoleDialog: false,
+      userId: ''
     }
   },
   created() {
@@ -254,6 +262,18 @@ export default {
     },
     closeDialog() {
       this.showCodeDialog = false
+    },
+    editRole(id) {
+      this.showRoleDialog = true
+      this.userId = id
+    },
+
+    showBtn(str) {
+      if (!this.clickBtnPermission(str)) {
+        return false
+      } else {
+        return true
+      }
     }
 
   }

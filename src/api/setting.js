@@ -1,7 +1,7 @@
 // 设置方面的接口
 import http from '@/utils/request'
 /**
- * 获取
+ * 获取角色列表信息
  * @param {*} page 页码
  * @param {*} pagesize  每一页多少条
  * @returns
@@ -37,3 +37,27 @@ export const reqGetRoleDetail = id => http.get(`/sys/role/${id}`)
  * @returns
  */
 export const reqUpDataRole = data => http.put(`/sys/role/${data.id}`, data)
+/**
+ * 根据用户ID和权限id 分配角色
+ * @param {*} id 用户id
+ * @param {*} roleIds 角色ID数组
+ * @returns
+ */
+export const reqAssignRoles = (id, roleIds) => http({
+  method: 'put',
+  url: '/sys/user/assignRoles',
+  data: {
+    id,
+    roleIds
+  }
+})
+
+// 给角色分配权限
+export function reqAssignPerm(data) {
+  return http({
+    url: '/sys/role/assignPrem',
+    method: 'put',
+    data
+  })
+}
+

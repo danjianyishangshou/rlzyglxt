@@ -77,7 +77,7 @@ export function reqUpdatePersonal(data) {
 }
 
 /** **
- * 获取用户的岗位信息  (岗位信息)
+ * 获取用户的岗位信 息  (岗位信息)
  * ****/
 export function reqGetJobDetail(id) {
   return http({
